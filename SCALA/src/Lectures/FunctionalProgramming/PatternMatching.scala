@@ -40,8 +40,53 @@ object PatternMatching extends App{
   }
   println(greet1)
 
+  /*
+  Few Important things to be noted while using Pattern Matching
+  ->Cases are in Order
+  ->If there is no Match found then it will throw Match error (this can be avoided by keeping default case)
+  ->type of Pattern Match Expression -WHen we have multiple data type in our match like String in one case and Int in another case and so on
+  in that case compiler will try to get the unified data type of the match
+  -> PM(Pattern Matching) works really well with case classes
+   */
 
+  //Don't use Pattern Matching everywhere as it might seems to be done everything pattern matching
+  val isEvenPM = x match {
+    case n if(n % 2 == 0) => "It is Even"
+    case _ => "Not an even Number"
+  }
+  println(isEvenPM)
+  val isEvenCond = if(x%2==0) true else false
+  println(isEvenCond)
+  val isEvenNormal = x % 2 == 0       //We can do the same thing as simple as this so don't complicate the simple things
+  println(isEvenNormal)
 
+  /*
+  Exercise
+   */
+
+  trait expr
+  case class Number(n: Int) extends expr
+  case class Sum(e1:expr,e2:expr) extends expr
+  case class Prod(e1:expr,e2:expr) extends expr
+
+  def Show(e: expr): String = e match {
+    case Number(n) => s"$n"
+    case Sum(e1,e2) => Show(e1) + " + " + Show(e2)
+    case Prod(e1,e2) => {
+      def Prodtempfunction(exp: expr) = exp match {
+        case Prod(_,_) => Show(exp)
+        case Number(_) => Show(exp)
+        case _ => "(" + Show(exp) + ")"
+      }
+
+    Prodtempfunction(e1) + " * " + Prodtempfunction(e2)
+    }
+
+  }
+  println(Show(Sum(Number(2),Number(3))))
+  println(Show(Sum(Sum(Number(2),Number(3)),Number(4))))
+  println(Show(Prod(Sum(Number(2),Number(3)),Number(4))))
+  println(Show(Sum(Prod(Number(2),Number(3)),Prod(Number(4),Number(5)))))
 
 
 
